@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>薯条stars · 贺意 — 方案B：极简艺术馆预览</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@200;300;400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        paper:     '#F6F3ED',
+        warm:      '#EDE8DF',
+        ink:       '#1A1714',
+        charcoal:  '#3D3832',
+        stone:     '#8A8278',
+        silver:    '#BFB9B0',
+        accent:    '#B8913E',
+        'accent-dim': '#8B6F3A',
+        border:    '#E0DBD2',
+      },
+      fontFamily: {
+        display:  ['Cormorant Garamond', 'Noto Serif SC', 'serif'],
+        serif:    ['Noto Serif SC', 'serif'],
+        body:     ['Noto Sans SC', 'sans-serif'],
+        mono:     ['JetBrains Mono', 'monospace'],
+      },
+    }
+  }
+}
+</script>
+
+<style>
+html { scroll-behavior: smooth; }
+
+/* Subtle paper texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  opacity: 0.7;
+}
+
+/* Custom scrollbar - light */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #F6F3ED; }
+::-webkit-scrollbar-thumb { background: #BFB9B0; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #8A8278; }
+
+/* Fade-in underline */
+.underline-reveal {
+  position: relative;
+}
+.underline-reveal::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0;
+  width: 0; height: 1px;
+  background: #1A1714;
+  transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.underline-reveal:hover::after { width: 100%; }
+
+/* Image card - museum frame effect */
+.museum-card {
+  transition: all 0.6s cubic-bezier(0.25,0.1,0.15,1);
+}
+.museum-card:hover {
+  transform: translateY(-4px);
+}
+.museum-card .frame-line {
+  transition: opacity 0.6s ease;
+  opacity: 0;
+}
+.museum-card:hover .frame-line {
+  opacity: 1;
+}
+
+/* Slow image reveal */
+.img-reveal {
+  transition: transform 0.9s cubic-bezier(0.16,1,0.3,1), filter 0.9s ease;
+}
+.museum-card:hover .img-reveal {
+  transform: scale(1.015);
+  filter: brightness(1.03);
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  will-change: opacity, transform;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Nav transition */
+.nav-glass {
+  transition: background 0.5s ease, backdrop-filter 0.5s ease, border-color 0.5s ease;
+}
+.nav-glass.scrolled {
+  background: rgba(246,243,237,0.88) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid #E0DBD2 !important;
+}
+
+/* Vertical divider pulse */
+.v-divider {
+  animation: vPulse 4s ease-in-out infinite;
+}
+@keyframes vPulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.7; }
+}
+
+/* Caption reveal */
+.caption-reveal {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.7s cubic-bezier(0.16,1,0.3,1);
+}
+.museum-card:hover .caption-reveal {
+  clip-path: inset(0 0 0 0);
+}
+</style>
+</head>
+<body class="bg-[#F6F3ED] text-[#1A1714] font-body antialiased overflow-x-hidden">
+
+<!-- ===== NAVIGATION ===== -->
+<nav id="nav" class="nav-glass fixed top-0 left-0 right-0 z-[1000] h-16 flex items-center bg-transparent">
+  <div class="max-w-[1360px] mx-auto w-full px-[clamp(1.5rem,5vw,4rem)] flex items-center justify-between">
+    <a href="#" class="font-display text-xl font-normal text-[#1A1714] tracking-[0.04em] no-underline">
+      薯条<span class="font-light italic text-[#8A8278]">stars</span>
+    </a>
+    <ul class="hidden md:flex gap-10 list-none">
+      <li><a href="#works" class="no-underline text-[#8A8278] text-[0.75rem] tracking-[0.12em] uppercase underline-reveal pb-1 transition-colors duration-300 hover:text-[#1A1714] font-body font-light">Works</a></li>
+      <li><a href="#about" class="no-underline text-[#8A8278] text-[0.75rem] tracking-[0.12em] uppercase underline-reveal pb-1 transition-colors duration-300 hover:text-[#1A1714] font-body font-light">About</a></li>
+      <li><a href="#contact" class="no-underline text-[#8A8278] text-[0.75rem] tracking-[0.12em] uppercase underline-reveal pb-1 transition-colors duration-300 hover:text-[#1A1714] font-body font-light">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="min-h-screen flex flex-col items-center justify-center text-center relative px-6">
+  <div class="max-w-[680px] mx-auto">
+
+    <!-- Subtle top line -->
+    <div class="v-divider w-px h-12 bg-gradient-to-b from-transparent via-[#8A8278] to-transparent mx-auto mb-16"></div>
+
+    <!-- Label -->
+    <p class="font-mono text-[0.6rem] tracking-[0.4em] uppercase text-[#8A8278] mb-10 opacity-0 animate-[fadeIn_1s_0.15s_ease_forwards]">
+      Astrophotography &mdash; Fine Art Prints
+    </p>
+
+    <!-- Name -->
+    <h1 class="font-display text-[clamp(3rem,9vw,7.5rem)] font-light leading-[0.95] tracking-[-0.01em] text-[#1A1714] mb-5 opacity-0"
+        style="animation: fadeIn 1.2s 0.35s ease forwards">
+      薯条<span class="italic font-normal">stars</span>
+    </h1>
+
+    <!-- Subtitle -->
+    <p class="font-serif text-[clamp(1.1rem,2.2vw,1.5rem)] font-light text-[#8A8278] tracking-[0.06em] mb-12 opacity-0"
+       style="animation: fadeIn 1s 0.5s ease forwards">
+      贺意 <span class="font-display italic text-[0.85em] text-[#BFB9B0]">He Yi</span>
+    </p>
+
+    <!-- Thin horizontal rule -->
+    <div class="w-16 h-px bg-[#BFB9B0] mx-auto mb-12 opacity-0"
+         style="animation: fadeIn 0.8s 0.65s ease forwards"></div>
+
+    <!-- Tagline -->
+    <p class="text-[#8A8278] text-[0.9rem] font-light leading-[2.2] tracking-[0.04em] opacity-0"
+       style="animation: fadeIn 0.9s 0.8s ease forwards">
+      星联CSVA星空摄影师 · 中国国家天文供稿摄影师<br>
+      视觉中国 · 图虫签约摄影师
+    </p>
+
+    <!-- Scroll -->
+    <div class="mt-20 opacity-0" style="animation: fadeIn 1s 1.15s ease forwards">
+      <a href="#works" class="flex flex-col items-center gap-3 no-underline text-[#BFB9B0] text-[0.6rem] tracking-[0.25em] uppercase font-mono transition-colors duration-300 hover:text-[#1A1714]">
+        <span>Enter Gallery</span>
+        <div class="w-px h-14 bg-gradient-to-b from-[#BFB9B0] to-transparent"></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<!-- ===== GALLERY SECTION ===== -->
+<section id="works" class="relative z-[1] bg-white border-t border-[#E0DBD2]">
+  <div class="max-w-[1200px] mx-auto px-[clamp(1.5rem,5vw,4rem)] py-[clamp(5rem,12vw,9rem)]">
+
+    <!-- Section header - minimal -->
+    <div class="flex items-baseline justify-between mb-20 reveal">
+      <div>
+        <p class="font-mono text-[0.6rem] tracking-[0.35em] uppercase text-[#B8913E] mb-4">Selected Works</p>
+        <h2 class="font-display text-[clamp(2rem,4.5vw,3.2rem)] font-light text-[#1A1714] tracking-[-0.005em]">作品集</h2>
+      </div>
+      <p class="font-display italic text-[#BFB9B0] text-sm hidden md:block">2019 &mdash; 2026</p>
+    </div>
+
+    <!-- Gallery: Large margin, single/double column museum layout -->
+    <!-- Work 01 - Full width hero image with enormous margins -->
+    <div class="reveal mb-24 md:mb-32">
+      <div class="museum-card cursor-pointer">
+        <div class="relative overflow-hidden">
+          <img src="assets/mw_天峻石林银河拱桥.jpg" alt="天峻石林银河拱桥"
+               class="w-full img-reveal block object-cover"
+               style="aspect-ratio: 16/7; object-position: center 35%;"
+               loading="lazy">
+          <!-- Frame lines on hover -->
+          <div class="frame-line absolute inset-0 border border-[#1A1714] pointer-events-none z-[2]"></div>
+        </div>
+        <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mt-5 px-0">
+          <div class="overflow-hidden">
+            <p class="caption-reveal font-display text-2xl md:text-3xl font-light text-[#1A1714] mb-1">天峻石林银河拱桥</p>
+          </div>
+          <div class="flex gap-6 mt-2 md:mt-0">
+            <span class="font-mono text-[0.65rem] text-[#8A8278] tracking-[0.06em]">青海 · 中国</span>
+            <span class="font-mono text-[0.65rem] text-[#BFB9B0] tracking-[0.06em]">24mm · f/1.4 · ISO 6400</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Work 02 + 03 - Two column with wide gutters -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20 mb-24 md:mb-32">
+      <div class="reveal">
+        <div class="museum-card cursor-pointer">
+          <div class="relative overflow-hidden">
+            <img src="assets/mw_星光灌溉翡翠湖.jpg" alt="星光灌溉翡翠湖"
+                 class="w-full img-reveal block object-cover"
+                 style="aspect-ratio: 5/7; object-position: center 40%;"
+                 loading="lazy">
+            <div class="frame-line absolute inset-0 border border-[#1A1714] pointer-events-none z-[2]"></div>
+          </div>
+          <div class="overflow-hidden mt-4">
+            <p class="caption-reveal font-display text-xl font-light text-[#1A1714] mb-1">星光灌溉翡翠湖</p>
+            <p class="font-mono text-[0.6rem] text-[#8A8278] tracking-[0.08em]">青海 · 翡翠湖</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="museum-card cursor-pointer">
+          <div class="relative overflow-hidden">
+            <img src="assets/mw_新疆鳄鱼湾冬季星空.jpg" alt="新疆鳄鱼湾冬季星空"
+                 class="w-full img-reveal block object-cover"
+                 style="aspect-ratio: 5/7; object-position: center 40%;"
+                 loading="lazy">
+            <div class="frame-line absolute inset-0 border border-[#1A1714] pointer-events-none z-[2]"></div>
+          </div>
+          <div class="overflow-hidden mt-4">
+            <p class="caption-reveal font-display text-xl font-light text-[#1A1714] mb-1">鳄鱼湾冬季星空</p>
+            <p class="font-mono text-[0.6rem] text-[#8A8278] tracking-[0.08em]">新疆 · 鳄鱼湾</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Work 04 - Full bleed wide landscape -->
+    <div class="reveal mb-24 md:mb-32">
+      <div class="museum-card cursor-pointer">
+        <div class="relative overflow-hidden">
+          <img src="assets/mw_公格尔九别峰黄道光X猎户座.jpg" alt="公格尔九别峰"
+               class="w-full img-reveal block object-cover"
+               style="aspect-ratio: 21/9; object-position: center 45%;"
+               loading="lazy">
+          <div class="frame-line absolute inset-0 border border-[#1A1714] pointer-events-none z-[2]"></div>
+        </div>
+        <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mt-5">
+          <div class="overflow-hidden">
+            <p class="caption-reveal font-display text-2xl md:text-3xl font-light text-[#1A1714] mb-1">公格尔九别峰 · 黄道光与猎户座</p>
+          </div>
+          <div class="flex gap-6 mt-2 md:mt-0">
+            <span class="font-mono text-[0.65rem] text-[#8A8278] tracking-[0.06em]">新疆 · 中国</span>
+            <span class="font-mono text-[0.65rem] text-[#BFB9B0] tracking-[0.06em]">35mm · f/1.8 · 10s</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Work 05 - Off-center single image -->
+    <div class="reveal mb-24 md:mb-32">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-end">
+        <div class="md:col-span-3 museum-card cursor-pointer">
+          <div class="relative overflow-hidden">
+            <img src="assets/mw_移轴调色盘.jpg" alt="移轴调色盘"
+                 class="w-full img-reveal block object-cover"
+                 style="aspect-ratio: 4/3;"
+                 loading="lazy">
+            <div class="frame-line absolute inset-0 border border-[#1A1714] pointer-events-none z-[2]"></div>
+          </div>
+          <div class="overflow-hidden mt-4">
+            <p class="caption-reveal font-display text-xl font-light text-[#1A1714] mb-1">移轴调色盘</p>
+            <p class="font-mono text-[0.6rem] text-[#8A8278] tracking-[0.08em]">特殊技法 · 移轴摄影</p>
+          </div>
+        </div>
+        <!-- Empty right column for breathing room -->
+        <div class="md:col-span-2 hidden md:block"></div>
+      </div>
+    </div>
+
+    <!-- View All -->
+    <div class="text-center mt-8 reveal">
+      <a href="#" class="inline-flex items-center gap-3 font-body text-[0.78rem] tracking-[0.1em] uppercase text-[#8A8278] no-underline transition-colors duration-300 hover:text-[#1A1714]">
+        View All Works
+        <span class="font-mono">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about" class="relative z-[1] bg-[#F6F3ED]">
+  <div class="max-w-[1200px] mx-auto px-[clamp(1.5rem,5vw,4rem)] py-[clamp(5rem,12vw,9rem)]">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
+
+      <!-- Left: Large image with generous padding -->
+      <div class="reveal">
+        <div class="museum-card">
+          <div class="relative overflow-hidden">
+            <img src="assets/mw_我与紫金山彗星.jpg" alt="我与紫金山彗星"
+                 class="w-full img-reveal block object-cover"
+                 style="aspect-ratio: 4/5;"
+                 loading="lazy">
+            <div class="frame-line absolute inset-0 border border-[#1A1714] pointer-events-none z-[2]"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Text with generous whitespace -->
+      <div class="reveal">
+        <p class="font-mono text-[0.6rem] tracking-[0.35em] uppercase text-[#B8913E] mb-10">About</p>
+
+        <h2 class="font-display text-[clamp(1.8rem,3.5vw,2.6rem)] font-light text-[#1A1714] leading-[1.2] mb-8">
+          追逐星光的人
+        </h2>
+
+        <blockquote class="font-serif text-[clamp(1.05rem,1.8vw,1.25rem)] font-light text-[#3D3832] leading-[1.7] mb-8 border-0 p-0 m-0 italic">
+          "当你真正站在银河之下，才会意识到人类所有的烦恼都不及一颗恒星的诞生与消亡来得壮丽。"
+        </blockquote>
+
+        <p class="text-[#8A8278] text-[0.9rem] font-light leading-[2] mb-12">
+          我是贺意，天文摄影师、星联CSVA成员。追逐星空的旅程始于多年前青海无人区的一个晚上——那份震撼让我决定用相机记录下宇宙的静默诗篇。
+        </p>
+
+        <div class="flex gap-16">
+          <div>
+            <p class="font-display text-4xl font-light text-[#B8913E] mb-1">200+</p>
+            <p class="font-mono text-[0.6rem] tracking-[0.15em] text-[#BFB9B0] uppercase">Published</p>
+          </div>
+          <div>
+            <p class="font-display text-4xl font-light text-[#B8913E] mb-1">12</p>
+            <p class="font-mono text-[0.6rem] tracking-[0.15em] text-[#BFB9B0] uppercase">Brands</p>
+          </div>
+          <div>
+            <p class="font-display text-4xl font-light text-[#B8913E] mb-1">6</p>
+            <p class="font-mono text-[0.6rem] tracking-[0.15em] text-[#BFB9B0] uppercase">Regions</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact" class="relative z-[1] bg-white border-t border-[#E0DBD2]">
+  <div class="max-w-[800px] mx-auto px-[clamp(1.5rem,5vw,4rem)] py-[clamp(5rem,12vw,9rem)] text-center">
+
+    <div class="reveal">
+      <p class="font-mono text-[0.6rem] tracking-[0.35em] uppercase text-[#B8913E] mb-6">Get in Touch</p>
+      <h2 class="font-display text-[clamp(2rem,4.5vw,3.2rem)] font-light text-[#1A1714] mb-6">合作联系</h2>
+    </div>
+
+    <!-- Minimal contact card -->
+    <div class="reveal max-w-[460px] mx-auto">
+      <p class="text-[#8A8278] text-[0.9rem] font-light leading-[2] mb-12">
+        商业拍摄 · 样片合作 · 摄影讲座 · 户外摄影团
+      </p>
+
+      <div class="space-y-4 mb-12 text-left">
+        <div class="flex items-center gap-5 py-4 border-b border-[#E0DBD2] transition-colors duration-300 hover:border-[#B8913E]">
+          <span class="font-mono text-[0.6rem] tracking-[0.2em] text-[#BFB9B0] uppercase w-16">WeChat</span>
+          <span class="font-mono text-sm text-[#1A1714] tracking-[0.03em]">ststarsgo</span>
+        </div>
+        <div class="flex items-center gap-5 py-4 border-b border-[#E0DBD2] transition-colors duration-300 hover:border-[#B8913E]">
+          <span class="font-mono text-[0.6rem] tracking-[0.2em] text-[#BFB9B0] uppercase w-16">Tel</span>
+          <span class="font-mono text-sm text-[#1A1714] tracking-[0.03em]">13080545412</span>
+        </div>
+      </div>
+
+      <!-- Social links -->
+      <div class="flex flex-wrap justify-center gap-6">
+        <a href="#" class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[#BFB9B0] no-underline transition-colors duration-300 hover:text-[#1A1714]">小红书</a>
+        <a href="#" class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[#BFB9B0] no-underline transition-colors duration-300 hover:text-[#1A1714]">抖音</a>
+        <a href="#" class="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[#BFB9B0] no-underline transition-colors duration-300 hover:text-[#1A1714]">百度百科</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="relative z-[1] bg-[#F6F3ED] border-t border-[#E0DBD2]">
+  <div class="max-w-[1200px] mx-auto px-[clamp(1.5rem,5vw,4rem)] py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+    <p class="font-mono text-[0.6rem] tracking-[0.12em] text-[#BFB9B0]">
+      &copy; 2026 薯条stars · 贺意
+    </p>
+    <p class="font-display text-sm italic text-[#BFB9B0]">
+      "We are all made of star-stuff."
+    </p>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

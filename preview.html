@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>薯条stars · 贺意 — 设计预览</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Noto+Sans+SC:wght@200;300;400;500&family=Noto+Serif+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<!-- Tailwind via CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        void:     '#03050B',
+        deep:     '#080B17',
+        card:     '#0C0F1E',
+        starlight: {
+          DEFAULT: '#C8A45C',
+          bright:  '#E8D49A',
+          dim:     '#6B5C3E',
+        },
+        nebula:   '#1A1440',
+        text: {
+          primary:  '#E6E0D3',
+          secondary:'#858090',
+          muted:    '#4A4458',
+        },
+        border:   'rgba(200,164,92,0.08)',
+      },
+      fontFamily: {
+        display:  ['Cinzel', 'Noto Serif SC', 'serif'],
+        serif:    ['Noto Serif SC', 'serif'],
+        body:     ['Noto Sans SC', 'sans-serif'],
+        mono:     ['JetBrains Mono', 'monospace'],
+      },
+      animation: {
+        'reveal':    'revealUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards',
+        'star-pulse':'starPulse 3s ease-in-out infinite',
+      },
+      keyframes: {
+        revealUp: {
+          from: { opacity: '0', transform: 'translateY(36px)' },
+          to:   { opacity: '1', transform: 'translateY(0)' },
+        },
+        starPulse: {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(200,164,92,0.15)' },
+          '50%':      { boxShadow: '0 0 40px rgba(200,164,92,0.3)' },
+        },
+      },
+    }
+  }
+}
+</script>
+
+<style>
+/* ===== Critical Custom Styles ===== */
+html { scroll-behavior: smooth; }
+
+/* Grain overlay texture */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #03050B; }
+::-webkit-scrollbar-thumb { background: #6B5C3E; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #C8A45C; }
+
+/* Link underline animation */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 1px;
+  background: #C8A45C;
+  transition: width 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.link-underline:hover::after { width: 100%; }
+
+/* Starfield canvas */
+#starfield {
+  position: fixed; inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Image hover - starlight glow */
+.gallery-img-wrapper {
+  position: relative;
+}
+.gallery-img-wrapper::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: radial-gradient(circle at 50% 50%, rgba(200,164,92,0.08) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+.gallery-img-wrapper:hover::before { opacity: 1; }
+
+/* Hero divider glow */
+.hero-divider {
+  animation: dividerPulse 3s ease-in-out infinite;
+}
+@keyframes dividerPulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(200,164,92,0.15); }
+  50% { box-shadow: 0 0 16px rgba(200,164,92,0.35); }
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Nav blur transition */
+.nav-blur {
+  transition: background 0.5s ease, backdrop-filter 0.5s ease, border-color 0.5s ease;
+}
+.nav-blur.scrolled {
+  background: rgba(3,5,11,0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(200,164,92,0.08) !important;
+}
+
+/* Asymmetric card hover */
+.asymmetric-card {
+  transition: transform 0.6s cubic-bezier(0.25,0.1,0.15,1), box-shadow 0.6s ease;
+}
+.asymmetric-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(200,164,92,0.2);
+}
+.asymmetric-card img {
+  transition: transform 0.8s cubic-bezier(0.25,0.1,0.15,1), filter 0.8s ease;
+}
+.asymmetric-card:hover img {
+  transform: scale(1.04);
+  filter: brightness(1.1);
+}
+
+/* Tag pill */
+.tag-pill {
+  transition: all 0.35s ease;
+}
+.tag-pill:hover {
+  border-color: rgba(200,164,92,0.4);
+  background: rgba(200,164,92,0.06);
+  color: #E8D49A;
+}
+</style>
+</head>
+<body class="bg-[#03050B] text-[#E6E0D3] font-body antialiased overflow-x-hidden">
+
+<!-- Starfield Canvas -->
+<canvas id="starfield"></canvas>
+
+<!-- ===== NAVIGATION ===== -->
+<nav id="nav" class="nav-blur fixed top-0 left-0 right-0 z-[1000] h-16 flex items-center bg-transparent">
+  <div class="max-w-[1400px] mx-auto w-full px-[clamp(1.25rem,4vw,3rem)] flex items-center justify-between">
+    <a href="#" class="font-display text-[#C8A45C] text-lg tracking-[0.05em] no-underline">
+      薯条<span class="text-[#E6E0D3]">stars</span>
+    </a>
+    <div class="flex items-center gap-8">
+      <ul class="hidden md:flex gap-8 list-none">
+        <li><a href="#works" class="no-underline text-[#858090] text-[0.78rem] font-medium tracking-[0.06em] link-underline pb-1 transition-colors duration-300 hover:text-[#C8A45C]">作品</a></li>
+        <li><a href="#about" class="no-underline text-[#858090] text-[0.78rem] font-medium tracking-[0.06em] link-underline pb-1 transition-colors duration-300 hover:text-[#C8A45C]">关于</a></li>
+        <li><a href="#contact" class="no-underline text-[#858090] text-[0.78rem] font-medium tracking-[0.06em] link-underline pb-1 transition-colors duration-300 hover:text-[#C8A45C]">联系</a></li>
+      </ul>
+      <button class="hidden md:flex items-center gap-2 px-4 py-2 bg-transparent border border-[#6B5C3E] rounded-full text-[#858090] text-[0.78rem] tracking-[0.05em] cursor-pointer transition-all duration-300 hover:border-[#C8A45C] hover:text-[#C8A45C] font-mono">
+        <span class="text-xs">EN</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO SECTION ===== -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <!-- Background image -->
+  <div class="absolute inset-0 z-[1]">
+    <img src="assets/mw_青海宁缠垭口银河.jpg" alt="银河" class="w-full h-full object-cover scale-110 transition-transform duration-[1.6s] ease-out"
+         onload="this.style.transform='scale(1)'">
+    <div class="absolute inset-0 bg-gradient-to-b from-[rgba(3,5,11,0.25)] via-[rgba(3,5,11,0.55)] to-[#03050B]"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-[2] text-center max-w-[780px] px-6 pt-20">
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 border border-[#6B5C3E] rounded-full mb-8 opacity-0 animate-reveal"
+         style="animation-delay: 0.15s">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#C8A45C] animate-star-pulse"></span>
+      <span class="font-mono text-[0.6rem] tracking-[0.3em] uppercase text-[#C8A45C]">Astrophotographer · China</span>
+    </div>
+
+    <!-- Name -->
+    <h1 class="font-display text-[clamp(3.5rem,10vw,8rem)] font-normal leading-[0.92] tracking-[-0.015em] text-[#E6E0D3] mb-3 opacity-0 animate-reveal"
+        style="animation-delay: 0.35s">
+      薯条<span class="text-[#C8A45C]">stars</span>
+    </h1>
+
+    <!-- Subtitle -->
+    <p class="font-body text-[clamp(1rem,2vw,1.3rem)] font-light text-[#858090] tracking-[0.15em] mb-10 opacity-0 animate-reveal"
+       style="animation-delay: 0.5s">
+      贺意 <span class="font-display text-[0.85em] tracking-[0.08em] text-[#4A4458]">He Yi</span>
+    </p>
+
+    <!-- Divider -->
+    <div class="hero-divider w-10 h-px bg-gradient-to-r from-transparent via-[#C8A45C] to-transparent mx-auto mb-10 opacity-0 animate-reveal"
+         style="animation-delay: 0.65s"></div>
+
+    <!-- Titles -->
+    <p class="text-[#858090] text-[clamp(0.8rem,1.3vw,0.95rem)] font-light leading-[2.2] max-w-[500px] mx-auto opacity-0 animate-reveal"
+       style="animation-delay: 0.8s">
+      星联CSVA星空摄影师<br>
+      中国国家天文 · 北京天文馆 · 上海天文馆 供稿摄影师<br>
+      视觉中国 · 图虫 签约摄影师
+    </p>
+
+    <!-- Scroll indicator -->
+    <div class="mt-16 opacity-0 animate-reveal" style="animation-delay: 1.1s">
+      <a href="#works" class="flex flex-col items-center gap-2 no-underline text-[#4A4458] text-[0.6rem] tracking-[0.2em] uppercase font-mono transition-colors duration-300 hover:text-[#C8A45C]">
+        <span>探索作品</span>
+        <div class="w-px h-10 bg-gradient-to-b from-[#4A4458] to-transparent relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-[#C8A45C] to-transparent"
+               style="animation: scrollLine 2.5s ease-in-out infinite;"></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+@keyframes scrollLine {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+</style>
+
+<!-- ===== WORKS SECTION ===== -->
+<section id="works" class="relative z-[1] bg-[#080B17]">
+  <div class="max-w-[1400px] mx-auto px-[clamp(1.25rem,4vw,3rem)] py-[clamp(5rem,12vw,10rem)]">
+
+    <!-- Section Header -->
+    <div class="text-center mb-20 reveal">
+      <p class="font-mono text-[0.6rem] tracking-[0.35em] uppercase text-[#C8A45C] mb-5">Portfolio</p>
+      <h2 class="font-display text-[clamp(2rem,5vw,3.5rem)] font-normal text-[#E6E0D3] mb-4">精选作品</h2>
+      <p class="text-[#858090] text-sm font-light max-w-[420px] mx-auto leading-relaxed">
+        每一张照片都是在零下十几度的暗夜中，数小时等待的结果
+      </p>
+    </div>
+
+    <!-- Asymmetric Gallery Grid -->
+    <!-- Row 1: Large left + two small stacked right -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <!-- Large item - spans 2 cols, 2 rows -->
+      <div class="md:col-span-2 md:row-span-2 asymmetric-card gallery-img-wrapper rounded-sm overflow-hidden cursor-pointer bg-[#0C0F1E]">
+        <img src="assets/mw_天峻石林银河拱桥.jpg" alt="天峻石林银河拱桥"
+             class="w-full h-full object-cover block min-h-[300px] md:min-h-[520px]" loading="lazy">
+        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(3,5,11,0.85)] via-transparent to-transparent z-[1] pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 right-0 z-[3] p-6 md:p-10">
+          <p class="font-mono text-[0.6rem] tracking-[0.25em] text-[#6B5C3E] mb-2 uppercase">Qinghai · China</p>
+          <h3 class="font-display text-xl md:text-2xl font-normal text-white mb-1">天峻石林银河拱桥</h3>
+          <p class="font-mono text-[0.65rem] text-[#858090]">24mm · f/1.4 · ISO 6400 · 15s × 12 Panels</p>
+        </div>
+      </div>
+
+      <!-- Small item top right -->
+      <div class="asymmetric-card gallery-img-wrapper rounded-sm overflow-hidden cursor-pointer bg-[#0C0F1E]">
+        <img src="assets/mw_星光灌溉翡翠湖.jpg" alt="星光灌溉翡翠湖"
+             class="w-full h-full object-cover block min-h-[200px] md:min-h-[252px]" loading="lazy">
+        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(3,5,11,0.8)] via-transparent to-transparent z-[1] opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 right-0 z-[3] p-5 translate-y-2 opacity-0 hover:translate-y-0 hover:opacity-100 transition-all duration-500">
+          <p class="font-mono text-[0.6rem] tracking-[0.2em] text-[#6B5C3E] mb-1">Qinghai</p>
+          <h3 class="font-display text-base font-normal text-white">星光灌溉翡翠湖</h3>
+        </div>
+      </div>
+
+      <!-- Small item bottom right -->
+      <div class="asymmetric-card gallery-img-wrapper rounded-sm overflow-hidden cursor-pointer bg-[#0C0F1E]">
+        <img src="assets/mw_新疆鳄鱼湾冬季星空.jpg" alt="新疆鳄鱼湾冬季星空"
+             class="w-full h-full object-cover block min-h-[200px] md:min-h-[252px]" loading="lazy">
+        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(3,5,11,0.8)] via-transparent to-transparent z-[1] opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 right-0 z-[3] p-5 translate-y-2 opacity-0 hover:translate-y-0 hover:opacity-100 transition-all duration-500">
+          <p class="font-mono text-[0.6rem] tracking-[0.2em] text-[#6B5C3E] mb-1">Xinjiang</p>
+          <h3 class="font-display text-base font-normal text-white">鳄鱼湾冬季星空</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Medium wide + tall narrow -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+      <!-- Wide medium -->
+      <div class="md:col-span-3 asymmetric-card gallery-img-wrapper rounded-sm overflow-hidden cursor-pointer bg-[#0C0F1E]">
+        <img src="assets/mw_公格尔九别峰黄道光X猎户座.jpg" alt="公格尔九别峰"
+             class="w-full h-full object-cover block min-h-[240px] md:min-h-[340px]" loading="lazy">
+        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(3,5,11,0.85)] via-transparent to-transparent z-[1] pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 right-0 z-[3] p-6 md:p-8">
+          <p class="font-mono text-[0.6rem] tracking-[0.25em] text-[#6B5C3E] mb-2">Xinjiang</p>
+          <h3 class="font-display text-xl font-normal text-white mb-1">公格尔九别峰 · 黄道光与猎户座</h3>
+          <p class="font-mono text-[0.65rem] text-[#858090]">35mm · f/1.8 · ISO 3200 · 10s</p>
+        </div>
+      </div>
+
+      <!-- Tall narrow -->
+      <div class="md:col-span-1 md:row-span-1 asymmetric-card gallery-img-wrapper rounded-sm overflow-hidden cursor-pointer bg-[#0C0F1E]">
+        <img src="assets/mw_移轴调色盘.jpg" alt="移轴调色盘"
+             class="w-full h-full object-cover block min-h-[240px] md:min-h-[340px]" loading="lazy">
+        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(3,5,11,0.8)] via-transparent to-transparent z-[1] opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 right-0 z-[3] p-5 translate-y-2 opacity-0 hover:translate-y-0 hover:opacity-100 transition-all duration-500">
+          <p class="font-mono text-[0.6rem] tracking-[0.2em] text-[#6B5C3E]">Special</p>
+          <h3 class="font-display text-base font-normal text-white">移轴调色盘</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Three equal for balance -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="asymmetric-card gallery-img-wrapper rounded-sm overflow-hidden cursor-pointer bg-[#0C0F1E]">
+        <img src="assets/mw_天山神秘大峡谷银河.jpg" alt="天山神秘大峡谷"
+             class="w-full h-full object-cover block min-h-[220px] md:min-h-[280px]" loading="lazy">
+        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(3,5,11,0.8)] via-transparent to-transparent z-[1] opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 right-0 z-[3] p-5 translate-y-2 opacity-0 hover:translate-y-0 hover:opacity-100 transition-all duration-500">
+          <p class="font-mono text-[0.6rem] tracking-[0.2em] text-[#6B5C3E]">Xinjiang</p>
+          <h3 class="font-display text-base font-normal text-white">天山神秘大峡谷银河</h3>
+        </div>
+      </div>
+      <div class="asymmetric-card gallery-img-wrapper rounded-sm overflow-hidden cursor-pointer bg-[#0C0F1E]">
+        <img src="assets/mw_茶园拱桥.jpg" alt="茶园拱桥"
+             class="w-full h-full object-cover block min-h-[220px] md:min-h-[280px]" loading="lazy">
+        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(3,5,11,0.8)] via-transparent to-transparent z-[1] opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 right-0 z-[3] p-5 translate-y-2 opacity-0 hover:translate-y-0 hover:opacity-100 transition-all duration-500">
+          <p class="font-mono text-[0.6rem] tracking-[0.2em] text-[#6B5C3E]">Fujian</p>
+          <h3 class="font-display text-base font-normal text-white">茶园拱桥银河</h3>
+        </div>
+      </div>
+      <div class="asymmetric-card gallery-img-wrapper rounded-sm overflow-hidden cursor-pointer bg-[#0C0F1E]">
+        <img src="assets/mw_内蒙古-莫尔格勒河冬季银河.jpg" alt="莫尔格勒河"
+             class="w-full h-full object-cover block min-h-[220px] md:min-h-[280px]" loading="lazy">
+        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(3,5,11,0.8)] via-transparent to-transparent z-[1] opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 right-0 z-[3] p-5 translate-y-2 opacity-0 hover:translate-y-0 hover:opacity-100 transition-all duration-500">
+          <p class="font-mono text-[0.6rem] tracking-[0.2em] text-[#6B5C3E]">Inner Mongolia</p>
+          <h3 class="font-display text-base font-normal text-white">莫尔格勒河冬季银河</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- View All button -->
+    <div class="text-center mt-14 reveal">
+      <a href="#" class="inline-flex items-center gap-3 px-7 py-3 bg-transparent border border-[#6B5C3E] rounded-full text-[#C8A45C] text-[0.78rem] tracking-[0.08em] font-medium no-underline transition-all duration-400 hover:bg-[#C8A45C] hover:text-[#03050B] hover:border-[#C8A45C] font-body">
+        浏览全部作品
+        <span class="font-mono text-lg">&rarr;</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== ABOUT / STATS QUOTE ===== -->
+<section id="about" class="relative z-[1]">
+  <div class="max-w-[1400px] mx-auto px-[clamp(1.25rem,4vw,3rem)] py-[clamp(5rem,12vw,10rem)]">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
+
+      <!-- Left: Large empty image -->
+      <div class="reveal">
+        <div class="rounded-sm overflow-hidden">
+          <img src="assets/mw_我与紫金山彗星.jpg" alt="我与紫金山彗星"
+               class="w-full block transition-all duration-700 hover:scale-[1.02] hover:brightness-110"
+               loading="lazy">
+        </div>
+      </div>
+
+      <!-- Right: Text block with generous whitespace -->
+      <div class="reveal">
+        <p class="font-mono text-[0.6rem] tracking-[0.35em] uppercase text-[#C8A45C] mb-8">About the Photographer</p>
+
+        <blockquote class="font-serif text-[clamp(1.3rem,2.5vw,1.8rem)] font-normal text-[#E6E0D3] leading-[1.5] mb-8 border-0 p-0 m-0">
+          "当你真正站在银河之下，<br>才会意识到<span class="text-[#C8A45C]">人类所有的烦恼都不及一颗恒星的诞生与消亡</span>来得壮丽。"
+        </blockquote>
+
+        <p class="text-[#858090] text-[0.95rem] font-light leading-[2] mb-10">
+          我是贺意，天文摄影师、星联CSVA成员。追逐星空的旅程始于多年前青海无人区的一个晚上——那次经历彻底改变了我对摄影和宇宙的认知。
+        </p>
+
+        <div class="flex flex-wrap gap-12">
+          <div>
+            <p class="font-display text-4xl text-[#C8A45C] mb-1">200+</p>
+            <p class="font-mono text-[0.65rem] tracking-[0.15em] text-[#4A4458]">发表作品</p>
+          </div>
+          <div>
+            <p class="font-display text-4xl text-[#C8A45C] mb-1">12</p>
+            <p class="font-mono text-[0.65rem] tracking-[0.15em] text-[#4A4458]">合作品牌</p>
+          </div>
+          <div>
+            <p class="font-display text-4xl text-[#C8A45C] mb-1">6</p>
+            <p class="font-mono text-[0.65rem] tracking-[0.15em] text-[#4A4458]">省级无人区</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact" class="relative z-[1] bg-[#080B17]">
+  <div class="max-w-[1400px] mx-auto px-[clamp(1.25rem,4vw,3rem)] py-[clamp(5rem,12vw,10rem)]">
+
+    <div class="text-center mb-20 reveal">
+      <p class="font-mono text-[0.6rem] tracking-[0.35em] uppercase text-[#C8A45C] mb-5">Get in Touch</p>
+      <h2 class="font-display text-[clamp(2rem,5vw,3.5rem)] font-normal text-[#E6E0D3] mb-4">合作联系</h2>
+      <p class="text-[#858090] text-sm font-light max-w-[420px] mx-auto leading-relaxed">
+        商业拍摄 · 样片合作 · 摄影讲座 · 户外摄影团
+      </p>
+    </div>
+
+    <!-- Centered contact card -->
+    <div class="max-w-[520px] mx-auto reveal">
+      <!-- WeChat -->
+      <div class="flex items-center gap-5 p-5 border border-[rgba(200,164,92,0.08)] rounded-sm mb-3 transition-all duration-300 hover:border-[rgba(200,164,92,0.25)] bg-[#0C0F1E]">
+        <div class="w-12 h-12 flex items-center justify-center border border-[#6B5C3E] rounded-sm flex-shrink-0">
+          <span class="font-display text-sm text-[#C8A45C]">微</span>
+        </div>
+        <div>
+          <p class="font-mono text-[0.6rem] tracking-[0.2em] uppercase text-[#4A4458] mb-0.5">WeChat</p>
+          <p class="font-mono text-base text-[#E6E0D3] tracking-[0.03em]">ststarsgo</p>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="flex items-center gap-5 p-5 border border-[rgba(200,164,92,0.08)] rounded-sm mb-8 transition-all duration-300 hover:border-[rgba(200,164,92,0.25)] bg-[#0C0F1E]">
+        <div class="w-12 h-12 flex items-center justify-center border border-[#6B5C3E] rounded-sm flex-shrink-0">
+          <span class="font-display text-sm text-[#C8A45C]">电</span>
+        </div>
+        <div>
+          <p class="font-mono text-[0.6rem] tracking-[0.2em] uppercase text-[#4A4458] mb-0.5">Tel</p>
+          <p class="font-mono text-base text-[#E6E0D3] tracking-[0.03em]">13080545412</p>
+        </div>
+      </div>
+
+      <!-- Social links -->
+      <div class="flex flex-wrap justify-center gap-3">
+        <a href="#" class="tag-pill px-6 py-3 border border-[rgba(200,164,92,0.1)] rounded-full text-[#858090] text-[0.78rem] tracking-[0.05em] no-underline font-body bg-[#0C0F1E]">小红书</a>
+        <a href="#" class="tag-pill px-6 py-3 border border-[rgba(200,164,92,0.1)] rounded-full text-[#858090] text-[0.78rem] tracking-[0.05em] no-underline font-body bg-[#0C0F1E]">抖音</a>
+        <a href="#" class="tag-pill px-6 py-3 border border-[rgba(200,164,92,0.1)] rounded-full text-[#858090] text-[0.78rem] tracking-[0.05em] no-underline font-body bg-[#0C0F1E]">百度百科</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="relative z-[1] border-t border-[rgba(200,164,92,0.06)]">
+  <div class="max-w-[1400px] mx-auto px-[clamp(1.25rem,4vw,3rem)] py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+    <p class="font-mono text-[0.6rem] tracking-[0.15em] text-[#4A4458]">
+      &copy; 2026 薯条stars · 贺意
+    </p>
+    <p class="font-display text-sm text-[#4A4458] italic">
+      "We are all made of star-stuff."
+    </p>
+  </div>
+</footer>
+
+<script>
+// ===== STARFIELD =====
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let stars = [];
+let W, H;
+
+function resizeCanvas() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const STAR_COUNT = 150;
+const STAR_COLORS = ['#ffffff', '#E8D49A', '#aaccff', '#d0c8ff'];
+
+class Star {
+  constructor() {
+    this.reset(true);
+  }
+  reset(init) {
+    this.x = Math.random() * W;
+    this.y = init ? Math.random() * H : -10;
+    this.size = Math.random() * 1.3 + 0.2;
+    this.opacity = Math.random() * 0.5 + 0.2;
+    this.speed = Math.random() * 0.006 + 0.001;
+    this.phase = Math.random() * Math.PI * 2;
+    this.color = STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)];
+  }
+  update(time) {
+    this.opacity = (Math.sin(time * this.speed + this.phase) * 0.35 + 0.55);
+    // Slow drift downward
+    this.y += this.speed * 0.3;
+    if (this.y > H + 10) { this.y = -10; this.x = Math.random() * W; }
+  }
+  draw(mx, my) {
+    const dx = (mx / W - 0.5) * 2;
+    const dy = (my / H - 0.5) * 2;
+    const px = this.x + dx * this.size * 6;
+    const py = this.y + dy * this.size * 6;
+    ctx.beginPath();
+    ctx.arc(px, py, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = this.opacity;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
+
+let mx = W / 2, my = H / 2;
+window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+window.addEventListener('touchmove', e => {
+  const t = e.touches[0];
+  mx = t.clientX; my = t.clientY;
+}, { passive: true });
+
+function animate(time) {
+  ctx.clearRect(0, 0, W, H);
+  stars.forEach(s => { s.update(time); s.draw(mx, my); });
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+
+// ===== NAV SCROLL =====
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ===== SCROLL REVEAL =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ===== HERO IMAGE LOAD =====
+window.addEventListener('load', () => {
+  const heroImg = document.querySelector('.hero img');
+  if (heroImg && !heroImg.complete) {
+    heroImg.style.transform = 'scale(1)';
+  }
+});
+</script>
+
+</body>
+</html>
