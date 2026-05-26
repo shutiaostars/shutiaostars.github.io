@@ -85,8 +85,7 @@ export default function ChapterOne() {
                       exif={work.exif}
                       number={work.number}
                       objectPosition={work.objectPosition}
-                      minHeight={isFirstPair ? "360px" : "320px"}
-                      maxHeight={isFirstPair ? "60vh" : "55vh"}
+                      height="460px"
                     />
                   </div>
                   <div className={isFirstPair ? "md:col-span-2" : "md:col-span-1"}>
@@ -98,7 +97,7 @@ export default function ChapterOne() {
                       exif={nextWork!.exif}
                       number={nextWork!.number}
                       objectPosition={nextWork!.objectPosition}
-                      minHeight={isFirstPair ? "360px" : "320px"}
+                      height="460px"
                     />
                   </div>
                 </div>

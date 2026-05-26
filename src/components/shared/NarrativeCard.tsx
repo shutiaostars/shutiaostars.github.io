@@ -12,6 +12,7 @@ interface NarrativeCardProps {
   variant?: "vertical" | "horizontal" | "immersive";
   maxHeight?: string;
   minHeight?: string;
+  height?: string;
   showOverlay?: boolean;
 }
 
@@ -26,6 +27,7 @@ export default function NarrativeCard({
   variant = "vertical",
   maxHeight,
   minHeight,
+  height,
   showOverlay = true,
 }: NarrativeCardProps) {
   const { openLightbox } = useModal();
@@ -48,8 +50,11 @@ export default function NarrativeCard({
           className="w-full block object-cover"
           style={{
             objectPosition,
-            ...(maxHeight ? { maxHeight } : {}),
-            ...(minHeight ? { minHeight } : {}),
+            ...(height
+              ? { height, minHeight: height, maxHeight: height }
+              : {}),
+            ...(!height && maxHeight ? { maxHeight } : {}),
+            ...(!height && minHeight ? { minHeight } : {}),
             ...(isHorizontal ? {} : { aspectRatio: "auto" }),
           }}
           loading="lazy"

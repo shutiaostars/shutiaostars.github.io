@@ -4,9 +4,13 @@ import GrainOverlay from "./components/layout/GrainOverlay";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import HeroSection from "./components/sections/HeroSection";
+import AboutSection from "./components/sections/AboutSection";
 import ChapterOne from "./components/sections/ChapterOne";
 import ChapterTwo from "./components/sections/ChapterTwo";
 import ChapterThree from "./components/sections/ChapterThree";
+import ServicesSection from "./components/sections/ServicesSection";
+import CollaborationsSection from "./components/sections/CollaborationsSection";
+
 import Epilogue from "./components/sections/Epilogue";
 import Lightbox from "./components/modals/Lightbox";
 import VideoModal from "./components/modals/VideoModal";
@@ -34,9 +38,13 @@ export default function App() {
         <GrainOverlay />
         <Navbar />
         <HeroSection />
+        <AboutSection />
         <ChapterOne />
         <ChapterTwo />
         <ChapterThree />
+        <ServicesSection />
+        <CollaborationsSection />
+
         <Epilogue />
         <Footer />
         <Lightbox />

@@ -1,103 +1,109 @@
-import SocialCard from "../shared/SocialCard";
-import { socialLinks } from "../../data/social";
 import { contactInfo } from "../../data/contact";
 
-function XiaohongshuIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 40 40" fill="none">
-      <rect x="6" y="6" width="28" height="28" rx="6" fill="white" />
-      <rect x="11" y="10" width="3" height="20" rx="1" fill="#FF2442" />
-      <rect x="17" y="13" width="3" height="17" rx="1" fill="#FF2442" />
-      <rect x="23" y="8" width="3" height="22" rx="1" fill="#FF2442" />
-      <rect x="29" y="16" width="3" height="14" rx="1" fill="#FF2442" />
-    </svg>
-  );
-}
-
-function DouyinIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-      <path d="M19.6 8.5c-1.2-.3-2.3-.6-3-1.3-.7-.7-1-1.7-1.2-2.7H13v9.8c0 1.7-1.3 3-3 3s-3-1.3-3-3 1.3-3 3-3c.3 0 .6 0 .9.1v-2.5c-1.5-.2-3 .3-4.1 1.3-1 1-1.5 2.3-1.5 3.7 0 3 2.5 5.5 5.5 5.5 3 0 5.5-2.5 5.5-5.5V8.8c1.2.5 2.5.7 3.8.7V6.9c-.2 0-.4 0-.5-.1V8.5z" />
-    </svg>
-  );
-}
-
-const icons: Record<string, React.ReactNode> = {
-  xiaohongshu: <XiaohongshuIcon />,
-  douyin: <DouyinIcon />,
+const contactIcons: Record<string, string> = {
+  WeChat: "微",
+  Tel: "电",
 };
 
 export default function Epilogue() {
   return (
     <section id="epilogue" className="relative z-[1] bg-void">
-      <div className="max-w-[900px] mx-auto px-[clamp(1.25rem,4vw,3rem)] py-[clamp(6rem,14vw,11rem)] text-center">
-        <div className="story-divider mb-16 relative">
-          <div
-            className="chapter-number"
-            style={{
-              WebkitTextStroke: "1px rgba(123,147,168,0.06)",
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-          >
-            E
-          </div>
-          <div className="relative z-[1]">
-            <p className="font-mono text-[0.6rem] tracking-[0.35em] text-star uppercase mb-4 chapter-reveal">
-              Epilogue
-            </p>
-            <h2
-              className="font-display text-[clamp(2.2rem,5vw,3.8rem)] font-normal text-text-body tracking-[-0.005em] mb-5 chapter-reveal"
-              style={{ transitionDelay: "0.1s" }}
-            >
-              故事未完
-            </h2>
-            <p
-              className="text-text-dim text-[0.95rem] font-light leading-[2] max-w-[500px] mx-auto chapter-reveal"
-              style={{ transitionDelay: "0.2s" }}
-            >
-              宇宙在膨胀，星辰在诞生与消亡。
-              <br />
-              追光的旅程不会停止。
-            </p>
-          </div>
+      <div className="max-w-[920px] mx-auto px-[clamp(1.25rem,4vw,3rem)] py-[clamp(4rem,10vw,7rem)]">
+        {/* CTA */}
+        <div className="text-center mb-20 chapter-reveal">
+          <p className="font-mono text-[0.6rem] tracking-[0.35em] text-star uppercase mb-4">
+            Contact
+          </p>
+          <h2 className="font-display text-[clamp(2rem,4.5vw,3.2rem)] font-normal text-text-body tracking-[-0.005em] mb-3">
+            开启一场星野之旅
+          </h2>
+          <p className="text-text-dim text-[0.95rem] font-light leading-[2] max-w-[480px] mx-auto">
+            合作拍摄、展览邀请、器材交流，或只是想聊聊星空——
+            <br />
+            欢迎随时联系。
+          </p>
         </div>
 
-        {/* Contact */}
-        <div className="chapter-reveal max-w-[420px] mx-auto" style={{ transitionDelay: "0.35s" }}>
-          <p className="font-display italic text-text-dim text-lg mb-8">合作与交流</p>
-          <div className="space-y-3 mb-10">
-            {contactInfo.map((item) => (
-              <div
-                key={item.label}
-                className="flex items-center justify-between py-3 border-b border-[rgba(123,147,168,0.08)] transition-colors duration-300 hover:border-[rgba(123,147,168,0.2)]"
-              >
-                <span className="font-mono text-[0.6rem] tracking-[0.2em] text-text-dim uppercase">
-                  {item.label}
-                </span>
-                <span className="font-mono text-sm text-text-body">{item.value}</span>
-              </div>
-            ))}
+        {/* Two-column grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+          {/* 联系方式 */}
+          <div className="chapter-reveal" style={{ transitionDelay: "0.1s" }}>
+            <h3 className="font-display text-[1.35rem] font-normal text-text-body mb-4">
+              联系方式
+            </h3>
+            <p className="text-text-dim text-[0.95rem] font-light leading-[2] mb-7">
+              专注星空宇宙与极致风光的商业摄影师
+              <br />
+              服务范围：手机/相机样片拍摄 · 户外摄影团 · 摄影讲座/培训
+            </p>
+            <div className="space-y-4">
+              {contactInfo.map((item) => (
+                <div key={item.label} className="flex items-center gap-4">
+                  <div className="w-12 h-12 flex items-center justify-center border border-[rgba(123,147,168,0.15)] rounded-sm shrink-0 text-star text-base font-semibold bg-[rgba(123,147,168,0.04)] transition-all duration-300 hover:border-star hover:shadow-[0_0_24px_rgba(123,147,168,0.12)]">
+                    {contactIcons[item.label]}
+                  </div>
+                  <div>
+                    <div className="text-text-dim text-[0.8rem] mb-0.5">
+                      {item.label}
+                    </div>
+                    <div className="text-text-body text-[1.05rem]">
+                      {item.value}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Social cards */}
-          <div className="max-w-[440px] mx-auto mt-8">
-            <p className="font-mono text-[0.6rem] tracking-[0.25em] text-star-dim uppercase text-center mb-6">
-              Find Me On
+          {/* 社交媒体 */}
+          <div className="chapter-reveal" style={{ transitionDelay: "0.2s" }}>
+            <h3 className="font-display text-[1.35rem] font-normal text-text-body mb-4">
+              社交媒体
+            </h3>
+            <p className="text-text-dim text-[0.95rem] font-light mb-7">
+              全网同名 · 欢迎关注
             </p>
-            <div className="grid grid-cols-2 gap-4">
-              {socialLinks.map((social) => (
-                <SocialCard
-                  key={social.id}
-                  name={social.name}
-                  account={social.account}
-                  url={social.url}
-                  bgColor={social.bgColor}
-                  hoverBorderColor={social.hoverBorderColor}
-                  hoverBgColor={social.hoverBgColor}
-                  icon={icons[social.id]}
-                />
-              ))}
+            <div className="flex flex-col gap-4">
+              <a
+                href="https://www.xiaohongshu.com/user/profile/65f37562000000000500db36"
+                target="_blank"
+                rel="noopener"
+                className="group flex items-center gap-4 p-4 bg-[rgba(123,147,168,0.03)] border border-[rgba(123,147,168,0.06)] rounded-sm no-underline transition-all duration-500 hover:border-[rgba(123,147,168,0.15)] hover:bg-[rgba(123,147,168,0.05)] hover:-translate-y-[2px] hover:shadow-[0_4px_24px_rgba(0,0,0,0.25)]"
+              >
+                <div className="w-10 h-10 flex items-center justify-center rounded-sm bg-[rgba(255,36,66,0.1)] shrink-0 text-[#FF2442]">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                    <rect x="3" y="2" width="18" height="20" rx="3"/>
+                    <rect x="6" y="6" width="12" height="12" rx="2"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="font-display text-[0.9rem] font-medium text-text-body block">小红书</span>
+                  <span className="text-text-dim text-[0.75rem]">@薯条stars</span>
+                  <span className="text-text-faint text-[0.7rem] font-light mt-0.5 block">拍摄幕后 · 器材分享 · 星空Vlog</span>
+                </div>
+                <span className="text-star-dim text-base font-light group-hover:text-star group-hover:translate-x-1 transition-all duration-300 shrink-0">&rarr;</span>
+              </a>
+
+              <a
+                href="https://www.douyin.com/user/MS4wLjABAAAA3sWO50Rw4bmRTLttSS-vF2LuIKC1sYe9ohMBc66nJsGUjRH47x_Kziv3eUzSar1Y"
+                target="_blank"
+                rel="noopener"
+                className="group flex items-center gap-4 p-4 bg-[rgba(123,147,168,0.03)] border border-[rgba(123,147,168,0.06)] rounded-sm no-underline transition-all duration-500 hover:border-[rgba(123,147,168,0.15)] hover:bg-[rgba(123,147,168,0.05)] hover:-translate-y-[2px] hover:shadow-[0_4px_24px_rgba(0,0,0,0.25)]"
+              >
+                <div className="w-10 h-10 flex items-center justify-center rounded-sm bg-[rgba(0,229,255,0.1)] shrink-0 text-[#00E5FF]">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                    <path d="M17.5 3h-3.3v10.7c0 2-1.5 3.6-3.5 3.6s-3.5-1.6-3.5-3.6 1.5-3.6 3.4-3.6v-3.4c-3.7 0-6.7 3.1-6.7 7s3 7 6.7 7c3.8 0 6.8-3.1 6.8-7v-7c1.4 1 3.1 1.6 5 1.6V7.9c-1.8 0-3.4-.7-4.6-1.9-.9-.9-1.3-2-1.3-3z"/>
+                  </svg>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="font-display text-[0.9rem] font-medium text-text-body block">抖音</span>
+                  <span className="text-text-dim text-[0.75rem]">@薯条stars</span>
+                  <span className="text-text-faint text-[0.7rem] font-light mt-0.5 block">延时大片 · 摄影教程 · 追星实况</span>
+                </div>
+                <span className="text-star-dim text-base font-light group-hover:text-star group-hover:translate-x-1 transition-all duration-300 shrink-0">&rarr;</span>
+              </a>
+
             </div>
           </div>
         </div>

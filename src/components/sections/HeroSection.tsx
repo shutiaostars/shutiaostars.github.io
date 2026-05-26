@@ -30,7 +30,7 @@ export default function HeroSection() {
             className="font-mono text-[0.6rem] tracking-[0.4em] text-star mb-8 opacity-0 animate-fade-up"
             style={{ animationDelay: "0.2s" }}
           >
-            PROLOGUE
+            天文摄影 · 星河揽照
           </p>
 
           <h1
@@ -42,10 +42,9 @@ export default function HeroSection() {
 
           <div className="opacity-0 animate-fade-up" style={{ animationDelay: "0.55s" }}>
             <p className="font-display italic text-[clamp(1.05rem,2vw,1.4rem)] text-text-dim font-normal tracking-[0.04em] mb-2">
-              贺意 · He Yi
             </p>
             <p className="font-body text-[clamp(0.8rem,1.3vw,0.95rem)] text-text-dim font-light tracking-[0.08em]">
-              天文摄影师 · 星野追光者
+              追逐银河与星光，记录宇宙的静默诗篇
             </p>
           </div>
 
@@ -55,15 +54,30 @@ export default function HeroSection() {
           />
 
           <p
-            className="text-text-dim text-[0.9rem] font-light leading-[2] max-w-[460px] opacity-0 animate-fade-up"
-            style={{ animationDelay: "0.8s" }}
+            className="text-text-dim text-[0.85rem] font-light tracking-[0.1em] opacity-0 animate-fade-up"
+            style={{ animationDelay: "0.75s" }}
           >
-            宇宙中每一束抵达镜头的光，
-            <br />
-            都穿越了数万光年的黑暗。
-            <br />
-            这是关于一个追光者的故事。
+            银河 · 深空 · 暗夜风光
           </p>
+
+          {/* Action buttons */}
+          <div
+            className="flex gap-4 mt-10 opacity-0 animate-fade-up"
+            style={{ animationDelay: "0.85s" }}
+          >
+            <a
+              href="#chapter1"
+              className="inline-flex items-center px-6 py-2.5 border border-star text-star text-[0.8rem] font-medium tracking-[0.04em] rounded-sm no-underline transition-all duration-300 hover:bg-star hover:text-cosmos"
+            >
+              浏览作品
+            </a>
+            <a
+              href="#about"
+              className="inline-flex items-center px-6 py-2.5 border border-[rgba(123,147,168,0.2)] text-text-dim text-[0.8rem] font-medium tracking-[0.04em] rounded-sm no-underline transition-all duration-300 hover:border-star hover:text-star"
+            >
+              了解更多
+            </a>
+          </div>
 
           {/* Scroll prompt */}
           <div
@@ -71,10 +85,10 @@ export default function HeroSection() {
             style={{ animationDelay: "1.1s" }}
           >
             <a
-              href="#chapter1"
+              href="#about"
               className="flex items-center gap-3 no-underline text-text-dim text-[0.6rem] tracking-[0.2em] uppercase font-mono transition-colors duration-300 hover:text-star group"
             >
-              <span>Begin the Journey</span>
+              <span>向下探索</span>
               <span className="inline-block w-8 h-px bg-text-dim group-hover:bg-star transition-colors duration-300" />
             </a>
           </div>

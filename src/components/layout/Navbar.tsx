@@ -22,7 +22,7 @@ export default function Navbar() {
             <li key={item.href}>
               <a
                 href={item.href}
-                className="no-underline text-text-dim text-[0.72rem] tracking-[0.12em] uppercase font-mono transition-colors duration-300 hover:text-star"
+                className="no-underline text-text-dim text-[0.8rem] tracking-[0.06em] font-light transition-colors duration-300 hover:text-star"
               >
                 {item.label}
               </a>

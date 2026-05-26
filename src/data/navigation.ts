@@ -1,6 +1,5 @@
 export const navItems = [
-  { label: "Chapter I", href: "#chapter1" },
-  { label: "Chapter II", href: "#chapter2" },
-  { label: "Chapter III", href: "#chapter3" },
-  { label: "Epilogue", href: "#epilogue" },
+  { label: "作品", href: "#chapter1" },
+  { label: "关于", href: "#about" },
+  { label: "联系", href: "#epilogue" },
 ];

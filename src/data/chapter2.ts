@@ -8,7 +8,7 @@ export const deepSpaceImage: Artwork = {
   location: "深空天体",
   description: "赤道仪跟踪，单帧 60s × 45 张叠加。离子尾与尘埃尾清晰可辨，在深空背景下划出璀璨痕迹。",
   exif: ["350mm", "f/6.3", "ISO 1600", "60s × 45"],
-  objectPosition: "center 40%",
+  objectPosition: "center 50%",
 };
 
 export const tiltShiftWorks: Artwork[] = [

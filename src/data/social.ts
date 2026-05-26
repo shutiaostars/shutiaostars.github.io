@@ -17,4 +17,13 @@ export const socialLinks = [
     hoverBorderColor: "#00E5FF",
     hoverBgColor: "rgba(0,229,255,0.04)",
   },
+  {
+    id: "baidu",
+    name: "百度百科",
+    account: "薯条stars",
+    url: "https://baike.baidu.com/item/%E8%B4%BA%E6%84%8F/65675099",
+    bgColor: "linear-gradient(135deg, #2932E1 0%, #9B30FF 100%)",
+    hoverBorderColor: "#4F6BED",
+    hoverBgColor: "rgba(41,50,225,0.04)",
+  },
 ];
