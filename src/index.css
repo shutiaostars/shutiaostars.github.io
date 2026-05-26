@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Grain overlay */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: #010914;
+}
+::-webkit-scrollbar-thumb {
+  background: #3A5068;
+  border-radius: 2px;
+}
+
+/* Chapter number watermark */
+.chapter-number {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(4rem, 12vw, 10rem);
+  font-weight: 700;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(123,147,168,0.12);
+  position: absolute;
+  top: -0.15em;
+  left: -0.05em;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* EXIF pill */
+.exif-pill {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: #7A8694;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid rgba(123,147,168,0.12);
+  border-radius: 2px;
+  background: rgba(123,147,168,0.03);
+}
+
+/* Story divider */
+.story-divider {
+  position: relative;
+}
+.story-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(123,147,168,0.15), transparent);
+}
+
+/* Nav transition */
+.nav-transparent {
+  transition: background 0.5s ease, backdrop-filter 0.5s ease, border-color 0.5s ease;
+}
+.nav-scrolled {
+  background: rgba(1,9,20,0.92) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(123,147,168,0.08) !important;
+}
+
+/* Timeline dot */
+.timeline-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7B93A8;
+  box-shadow: 0 0 8px rgba(123,147,168,0.4);
+  flex-shrink: 0;
+  margin-top: 0.55em;
+}
+
+/* Social card */
+.social-card {
+  transition: transform 0.4s cubic-bezier(0.25,0.1,0.15,1),
+              border-color 0.4s ease,
+              background 0.4s ease,
+              box-shadow 0.4s ease;
+}
+.social-card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+/* Image card hover */
+.narrative-card {
+  transition: transform 0.7s cubic-bezier(0.25,0.1,0.15,1);
+}
+.narrative-card:hover {
+  transform: scale(1.02);
+}
+.narrative-card img {
+  transition: transform 1.2s cubic-bezier(0.16,1,0.3,1), filter 1.2s ease;
+}
+.narrative-card:hover img {
+  transform: scale(1.06);
+  filter: brightness(1.08) contrast(1.04);
+}
+
+/* Chapter reveal animation */
+.chapter-reveal {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
+}
+.chapter-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Shooting star accent */
+.shooting-accent {
+  position: relative;
+  display: inline-block;
+}
+.shooting-accent::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -28px;
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(to right, rgba(123,147,168,0.6), transparent);
+  transform: rotate(-30deg);
+}
